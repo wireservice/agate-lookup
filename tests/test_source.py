@@ -12,4 +12,11 @@ import agatelookup
 agatelookup.patch()
 
 class TestSource(agate.AgateTestCase):
-    pass
+    def setUp(self):
+        self.source = agatelookup.Source()
+
+    def test_get_table(self):
+        table = self.source.get_table('usps', 'state')
+
+        self.assertColumnNames(table, ['usps', 'state'])
+        self.assertColumnTypes(table, [agate.Text, agate.Text])
