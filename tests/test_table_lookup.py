@@ -19,16 +19,10 @@ class TestLookup(agate.AgateTestCase):
             ('TX',)
         )
 
-        self.column_names = [
-            'usps'
-        ]
-
-        self.column_types = [
-            agate.Text()
-        ]
+        self.column_names = ['usps']
+        self.column_types = [agate.Text()]
 
         self.table = agate.Table(self.rows, self.column_names, self.column_types)
-
         self.source = agatelookup.Source()
 
     def test_lookup(self):

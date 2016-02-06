@@ -15,6 +15,11 @@ class TestSource(agate.AgateTestCase):
     def setUp(self):
         self.source = agatelookup.Source()
 
+    def test_get_metadata(self):
+        meta = self.source.get_metadata('usps', 'state')
+
+        self.assertEqual(meta['origin'], 'Census Bureau')
+
     def test_get_table(self):
         table = self.source.get_table('usps', 'state')
 

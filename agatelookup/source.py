@@ -11,38 +11,60 @@ agateremote.patch()
 
 # TKTK: host file somewhere we won't need cache busters
 
-def default_url_func(root, keys, value):
-    if isinstance(keys, six.string_types):
-        keys = [keys]
+def default_table_url_func(root, keys, value, version=None):
+    if isinstance(keys, (list, tuple)):
+        keys = '/'.join(keys)
 
-    return '%s/%s/%s.csv' % (root, '/'.join(keys), value)
+    url = '%s/%s/%s' % (root, keys, value)
 
-class Source(agateremote.Archive):
+    if version:
+        url += '.%s' % version
+
+    url += '.csv?%s' % str(random.randrange(0, 9999))
+
+    return url
+
+def default_metadata_url_func(root, keys, value, version=None):
+    if isinstance(keys, (list, tuple)):
+        keys = '/'.join(keys)
+
+    url = '%s/%s/%s' % (root, keys, value)
+
+    if version:
+        url += '.%s' % version
+
+    url += '.csv.yml?%s' % str(random.randrange(0, 9999))
+
+    return url
+
+def make_type_tester(meta):
+    force = {}
+
+    for k, v in meta['columns'].items():
+        force[k] = getattr(agate, v)()
+
+    return agate.TypeTester(force=force)
+
+class Source(object):
     """
     TKTK
     """
-    def __init__(self, root='https://github.com/onyxfish/lookup/raw/master', url_func=default_url_func, callback=agate.Table.from_csv):
-        super(Source, self).__init__(root, url_func, callback)
+    def __init__(self, root='https://github.com/onyxfish/lookup/raw/master', table_url_func=default_table_url_func, metadata_url_func=default_metadata_url_func, callback=agate.Table.from_csv):
+        self._root = root
+        self._table_url_func = table_url_func
+        self._metadata_url_func = metadata_url_func
+        self._callback = callback
 
-    def get_metadata(self, keys, value):
-        url = '%s.yml' % self._url_func(self._root, keys, value) + '?' + str(random.randrange(0, 9999))
-
+    def get_metadata(self, keys, value, version=None):
+        url = self._metadata_url_func(self._root, keys, value, version)
         r = requests.get(url)
 
         return yaml.load(r.text)
 
-    def make_type_tester(self, meta):
-        force = {}
+    def get_table(self, keys, value, version=None):
+        meta = self.get_metadata(keys, value, version)
+        tester = make_type_tester(meta)
 
-        for k, v in meta.items():
-            force[k] = getattr(agate, v)()
-
-        return agate.TypeTester(force=force)
-
-    def get_table(self, keys, value):
-        meta = self.get_metadata(keys, value)
-        tester = self.make_type_tester(meta)
-
-        url = self._url_func(self._root, keys, value) + '?' + str(random.randrange(0, 9999))
+        url = self._table_url_func(self._root, keys, value, version)
 
         return agate.Table.from_url(url, column_types=tester, callback=self._callback)
