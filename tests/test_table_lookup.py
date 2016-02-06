@@ -13,22 +13,42 @@ agatelookup.patch()
 
 class TestLookup(agate.AgateTestCase):
     def setUp(self):
-        self.rows = (
+        self.source = agatelookup.Source()
+
+    def test_lookup(self):
+        rows = (
             ('WA',),
             ('VA',),
             ('TX',)
         )
 
-        self.column_names = ['usps']
-        self.column_types = [agate.Text()]
+        column_names = ['usps']
+        column_types = [agate.Text()]
 
-        self.table = agate.Table(self.rows, self.column_names, self.column_types)
-        self.source = agatelookup.Source()
+        table = agate.Table(rows, column_names, column_types)
 
-    def test_lookup(self):
-        result = self.table.lookup(self.source, 'usps', 'state')
+        result = table.lookup(self.source, 'usps', 'state')
 
         self.assertColumnNames(result, ['usps', 'state'])
         self.assertColumnTypes(result, [agate.Text, agate.Text])
 
         self.assertSequenceEqual(result.rows[1].values(), ['VA', 'Virginia'])
+
+    def test_lookup_version(self):
+        rows = (
+            ('1111',),
+            ('313320',),
+            ('522310',)
+        )
+
+        column_names = ['naics']
+        column_types = [agate.Text()]
+
+        table = agate.Table(rows, column_names, column_types)
+
+        result = table.lookup(self.source, 'naics', 'description', version='2012')
+
+        self.assertColumnNames(result, ['naics', 'description'])
+        self.assertColumnTypes(result, [agate.Text, agate.Text])
+
+        self.assertSequenceEqual(result.rows[1].values(), ['313320', 'Fabric Coating Mills'])

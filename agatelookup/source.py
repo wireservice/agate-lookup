@@ -59,6 +59,8 @@ class Source(object):
         url = self._metadata_url_func(self._root, keys, value, version)
         r = requests.get(url)
 
+        # TKTK: handle error
+
         return yaml.load(r.text)
 
     def get_table(self, keys, value, version=None):

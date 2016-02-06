@@ -7,12 +7,22 @@ agatelookup.patch()
 
 source = agatelookup.Source()
 
-table = agate.Table([
-    ('WA',),
-    ('VA',),
-    ('NE',)
-], ['usps'])
+# table = agate.Table([
+#     ('WA',),
+#     ('VA',),
+#     ('NE',)
+# ], ['usps'])
+#
+# joined = table.lookup(source, 'usps', 'state')
+#
+# joined.print_table()
 
-joined = table.lookup(source, 'usps', 'state')
+table = agate.Table([
+    ('1111',),
+    ('313320',),
+    ('522310',)
+], ['naics'], [agate.Text()])
+
+joined = table.lookup(source, 'naics', 'description', version='2012')
 
 joined.print_table()

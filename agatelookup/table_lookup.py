@@ -10,11 +10,11 @@ import six
 agateremote.patch()
 
 class TableLookup(object):
-    def lookup(self, source, source_keys, value, table_keys=None):
+    def lookup(self, source, source_keys, value, table_keys=None, version=None):
         """
         TKTK
         """
-        table = source.get_table(source_keys, value)
+        table = source.get_table(source_keys, value, version)
 
         if not table_keys:
             table_keys = source_keys
