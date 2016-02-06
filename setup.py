@@ -4,7 +4,9 @@ from setuptools import setup
 
 install_requires = [
     'agate>=1.2.2',
-    'agate-remote>=0.1.0'
+    'agate-remote>=0.1.0',
+    'requests>=2.9.1',
+    'pyyaml>=3.11'
 ]
 
 setup(

@@ -29,4 +29,6 @@ class TableLookup(object):
         else:
             right_key = source_keys
 
+        # TKTK: the following keys were not matched: ...
+
         return self.join(table, left_key, right_key)
