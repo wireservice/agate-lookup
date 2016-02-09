@@ -17,12 +17,22 @@ source = agatelookup.Source()
 #
 # joined.print_table()
 
-table = agate.Table([
-    ('1111',),
-    ('313320',),
-    ('522310',)
-], ['naics'], [agate.Text()])
+# table = agate.Table([
+#     ('1111',),
+#     ('313320',),
+#     ('522310',)
+# ], ['naics'], [agate.Text()])
+#
+# joined = table.lookup(source, 'naics', 'description', version='2012')
+#
+# joined.print_table()
 
-joined = table.lookup(source, 'naics', 'description', version='2012')
+table = agate.Table([
+    ('AZ', '1985'),
+    ('WY', '2014'),
+    ('SC', '1994')
+], ['usps', 'year'], [agate.Text(), agate.Text()])
+
+joined = table.lookup(source, ['usps', 'year'], 'population')
 
 joined.print_table()

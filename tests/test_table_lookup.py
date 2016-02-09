@@ -52,3 +52,22 @@ class TestLookup(agate.AgateTestCase):
         self.assertColumnTypes(result, [agate.Text, agate.Text])
 
         self.assertSequenceEqual(result.rows[1].values(), ['313320', 'Fabric Coating Mills'])
+
+    def test_lookup_multiple_keys(self):
+        rows = (
+            ('AZ', '1985'),
+            ('WY', '2014'),
+            ('SC', '1994')
+        )
+
+        column_names = ['usps', 'year']
+        column_types = [agate.Text(), agate.Text()]
+
+        table = agate.Table(rows, column_names, column_types)
+
+        result = table.lookup(self.source, ['usps', 'year'], 'population')
+
+        self.assertColumnNames(result, ['usps', 'year', 'population'])
+        self.assertColumnTypes(result, [agate.Text, agate.Text, agate.Number])
+
+        self.assertSequenceEqual(result.rows[1].values(), ['WY', '2014', 584153])
