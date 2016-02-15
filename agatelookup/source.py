@@ -70,7 +70,7 @@ class Source(object):
         Typically this is :meth:`.agate.Table.from_csv`, but it could also be
         :meth:`.agate.Table.from_json` or a method provided by an extension.
     """
-    def __init__(self, root='http://wireservice.github.io/lookup/', table_url_func=default_table_url_func, metadata_url_func=default_metadata_url_func, callback=agate.Table.from_csv):
+    def __init__(self, root='http://wireservice.github.io/lookup', table_url_func=default_table_url_func, metadata_url_func=default_metadata_url_func, callback=agate.Table.from_csv):
         self._root = root
         self._table_url_func = table_url_func
         self._metadata_url_func = metadata_url_func
