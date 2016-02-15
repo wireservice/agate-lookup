@@ -18,7 +18,7 @@
     :target: https://pypi.python.org/pypi/agate-lookup
     :alt: Support Python versions
 
-agate-lookup adds remote loookup tables to `agate <https://github.com/onyxfish/agate>`_.
+agate-lookup adds remote lookup tables to `agate <https://github.com/onyxfish/agate>`_.
 
 Important links:
 
