@@ -24,5 +24,5 @@ Important links:
 
 * agate             http://agate.rtfd.org
 * Documentation:    http://agate-lookup.rtfd.org
-* Repository:       https://github.com/onyxfish/agate-lookup
-* Issues:           https://github.com/onyxfish/agate-lookup/issues
+* Repository:       https://github.com/wireservice/agate-lookup
+* Issues:           https://github.com/wireservice/agate-lookup/issues

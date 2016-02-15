@@ -2,13 +2,10 @@
 
 import agate
 import agateremote
-import random
 import requests
 import yaml
 
 agateremote.patch()
-
-# TKTK: host file somewhere we won't need cache busters
 
 def default_table_url_func(root, keys, value, version=None):
     """
@@ -22,7 +19,7 @@ def default_table_url_func(root, keys, value, version=None):
     if version:
         url += '.%s' % version
 
-    url += '.csv?%s' % str(random.randrange(0, 9999))
+    url += '.csv'
 
     return url
 
@@ -38,7 +35,7 @@ def default_metadata_url_func(root, keys, value, version=None):
     if version:
         url += '.%s' % version
 
-    url += '.csv.yml?%s' % str(random.randrange(0, 9999))
+    url += '.csv.yml'
 
     return url
 
@@ -73,7 +70,7 @@ class Source(object):
         Typically this is :meth:`.agate.Table.from_csv`, but it could also be
         :meth:`.agate.Table.from_json` or a method provided by an extension.
     """
-    def __init__(self, root='https://github.com/onyxfish/lookup/raw/master', table_url_func=default_table_url_func, metadata_url_func=default_metadata_url_func, callback=agate.Table.from_csv):
+    def __init__(self, root='http://wireservice.github.io/lookup/', table_url_func=default_table_url_func, metadata_url_func=default_metadata_url_func, callback=agate.Table.from_csv):
         self._root = root
         self._table_url_func = table_url_func
         self._metadata_url_func = metadata_url_func
