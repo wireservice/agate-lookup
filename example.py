@@ -39,3 +39,14 @@ table = agate.Table([
 joined = table.lookup(source, ['usps', 'year'], 'population')
 
 joined.print_table()
+
+# Multiple keys 2
+table = agate.Table([
+    ('1985', '3'),
+    ('2007', '5'),
+    ('2011', '6')
+], ['year', 'month'], [agate.Text(), agate.Text()])
+
+joined = table.lookup(source, ['year', 'month'], 'cpi')
+
+joined.print_table()
