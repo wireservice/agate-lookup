@@ -1,5 +1,5 @@
 .. image:: https://travis-ci.org/onyxfish/agate-lookup.png
-    :target: https://travis-ci.org/onyxfish/agate-lookup
+    :target: https://travis-ci.org/wireservice/agate-lookup
     :alt: Build status
 
 .. image:: https://img.shields.io/pypi/dw/agate-lookup.svg
