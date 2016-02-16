@@ -1,4 +1,4 @@
-.. image:: https://travis-ci.org/onyxfish/agate-lookup.png
+.. image:: https://travis-ci.org/wireservice/agate-lookup.png
     :target: https://travis-ci.org/wireservice/agate-lookup
     :alt: Build status
 
