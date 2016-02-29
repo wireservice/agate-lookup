@@ -5,8 +5,6 @@ import agatelookup
 
 agatelookup.patch()
 
-source = agatelookup.Source()
-
 # Simple
 table = agate.Table([
     ('WA',),
@@ -14,7 +12,7 @@ table = agate.Table([
     ('NE',)
 ], ['usps'])
 
-joined = table.lookup(source, 'usps', 'state')
+joined = table.lookup('usps', 'state')
 
 joined.print_table()
 
@@ -25,7 +23,7 @@ table = agate.Table([
     ('522310',)
 ], ['naics'], [agate.Text()])
 
-joined = table.lookup(source, 'naics', 'description', version='2012')
+joined = table.lookup('naics', 'description', version='2012')
 
 joined.print_table()
 
@@ -36,7 +34,7 @@ table = agate.Table([
     ('SC', '1994')
 ], ['usps', 'year'], [agate.Text(), agate.Text()])
 
-joined = table.lookup(source, ['usps', 'year'], 'population')
+joined = table.lookup(['usps', 'year'], 'population')
 
 joined.print_table()
 
@@ -47,6 +45,6 @@ table = agate.Table([
     ('2011', '6')
 ], ['year', 'month'], [agate.Text(), agate.Text()])
 
-joined = table.lookup(source, ['year', 'month'], 'cpi')
+joined = table.lookup(['year', 'month'], 'cpi')
 
 joined.print_table()
