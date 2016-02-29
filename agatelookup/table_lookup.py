@@ -13,7 +13,7 @@ agateremote.patch()
 DEFAULT_SOURCE = Source()
 
 class TableLookup(object):
-    def lookup(self, source_keys, value, table_keys=None, version=None, source=None):
+    def lookup(self, source_keys, value, table_keys=None, version=None, source=None, require_match=False):
         """
         Fetch a lookup table from the remote source, matches it this table by
         its key columns, appends the value column and returns a new table
@@ -40,10 +40,13 @@ class TableLookup(object):
             points to the
             `wireservice/lookup <https://github.com/wireservice/lookup>`_
             repository.
+        :param require_match:
+            If :code:`True`, an exception will be raised if there is a value in
+            this table with no matching entry in the lookup table.
         """
         if source is None:
             source = DEFAULT_SOURCE
 
         table = source.get_table(source_keys, value, version)
 
-        return self.join(table, table_keys or source_keys, source_keys)
+        return self.join(table, table_keys or source_keys, source_keys, require_match=require_match)

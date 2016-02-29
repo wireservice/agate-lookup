@@ -68,3 +68,37 @@ class TestLookup(agate.AgateTestCase):
         self.assertColumnTypes(result, [agate.Text, agate.Text, agate.Number])
 
         self.assertSequenceEqual(result.rows[1].values(), ['WY', '2014', 584153])
+
+    def test_lookup_no_match(self):
+        rows = (
+            ('WA',),
+            ('VA',),
+            ('FA',)
+        )
+
+        column_names = ['usps']
+        column_types = [agate.Text()]
+
+        table = agate.Table(rows, column_names, column_types)
+
+        result = table.lookup('usps', 'state')
+
+        self.assertColumnNames(result, ['usps', 'state'])
+        self.assertColumnTypes(result, [agate.Text, agate.Text])
+
+        self.assertSequenceEqual(result.rows[2].values(), ['FA', None])
+
+    def test_lookup_require_match(self):
+        rows = (
+            ('WA',),
+            ('VA',),
+            ('FA',)
+        )
+
+        column_names = ['usps']
+        column_types = [agate.Text()]
+
+        table = agate.Table(rows, column_names, column_types)
+
+        with self.assertRaises(ValueError):
+            result = table.lookup('usps', 'state', require_match=True)
