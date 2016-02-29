@@ -6,18 +6,19 @@ This module contains the Lookup extension to :class:`Table <agate.table.Table>`.
 
 import agateremote
 
+from agatelookup.source import Source
+
 agateremote.patch()
 
+DEFAULT_SOURCE = Source()
+
 class TableLookup(object):
-    def lookup(self, source, source_keys, value, table_keys=None, version=None):
+    def lookup(self, source_keys, value, table_keys=None, version=None, source=None):
         """
         Fetch a lookup table from the remote source, matches it this table by
         its key columns, appends the value column and returns a new table
         instance.
 
-        :param source:
-            An instance of :class:`.Source` that defines where lookup tables
-            are located.
         :param source_keys:
             A column name or a sequence of such names to match in the lookup
             table. For example :code:`'naics'` or :code:`['city', 'year']`.
@@ -33,7 +34,16 @@ class TableLookup(object):
             An optional version of the lookup to use, if more than one exists.
             For instance :code:`'2007'` for the 2007 edition of the NAICS codes
             or :code:`'2012'` for the 2012 version.
+        :param source:
+            An instance of :class:`.Source` that defines where lookup tables
+            are located. If not specified a default source will be used that
+            points to the
+            `wireservice/lookup <https://github.com/wireservice/lookup>`_
+            repository.
         """
+        if source is None:
+            source = DEFAULT_SOURCE
+
         table = source.get_table(source_keys, value, version)
 
         return self.join(table, table_keys or source_keys, source_keys)

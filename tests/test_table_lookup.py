@@ -12,9 +12,6 @@ import agatelookup
 agatelookup.patch()
 
 class TestLookup(agate.AgateTestCase):
-    def setUp(self):
-        self.source = agatelookup.Source()
-
     def test_lookup(self):
         rows = (
             ('WA',),
@@ -27,7 +24,7 @@ class TestLookup(agate.AgateTestCase):
 
         table = agate.Table(rows, column_names, column_types)
 
-        result = table.lookup(self.source, 'usps', 'state')
+        result = table.lookup('usps', 'state')
 
         self.assertColumnNames(result, ['usps', 'state'])
         self.assertColumnTypes(result, [agate.Text, agate.Text])
@@ -46,7 +43,7 @@ class TestLookup(agate.AgateTestCase):
 
         table = agate.Table(rows, column_names, column_types)
 
-        result = table.lookup(self.source, 'naics', 'description', version='2012')
+        result = table.lookup('naics', 'description', version='2012')
 
         self.assertColumnNames(result, ['naics', 'description'])
         self.assertColumnTypes(result, [agate.Text, agate.Text])
@@ -65,7 +62,7 @@ class TestLookup(agate.AgateTestCase):
 
         table = agate.Table(rows, column_names, column_types)
 
-        result = table.lookup(self.source, ['usps', 'year'], 'population')
+        result = table.lookup(['usps', 'year'], 'population')
 
         self.assertColumnNames(result, ['usps', 'year', 'population'])
         self.assertColumnTypes(result, [agate.Text, agate.Text, agate.Number])
