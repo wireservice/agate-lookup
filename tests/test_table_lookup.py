@@ -102,3 +102,10 @@ class TestLookup(agate.AgateTestCase):
 
         with self.assertRaises(ValueError):
             result = table.lookup('usps', 'state', require_match=True)
+
+    def test_from_lookup(self):
+        table = agate.Table.from_lookup('usps', 'state')
+
+        self.assertColumnNames(table, ['usps', 'state'])
+        self.assertColumnTypes(table, [agate.Text, agate.Text])
+        self.assertSequenceEqual(table.rows[1].values(), ['AK', 'Alaska'])

@@ -50,3 +50,14 @@ class TableLookup(object):
         table = source.get_table(source_keys, value, version)
 
         return self.join(table, table_keys or source_keys, source_keys, require_match=require_match)
+
+    @classmethod
+    def from_lookup(cls, source_keys, value, version=None, source=None):
+        """
+        Fetch a lookup table, but don't join it to anything. See
+        :meth:`.TableLookup.lookup` for arguments.
+        """
+        if source is None:
+            source = DEFAULT_SOURCE
+
+        return source.get_table(source_keys, value, version)

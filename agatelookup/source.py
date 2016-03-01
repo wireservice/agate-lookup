@@ -85,13 +85,19 @@ class Source(object):
         url = self._metadata_url_func(self._root, keys, value, version)
         r = requests.get(url)
 
-        # TKTK: handle error
+        try:
+            data = yaml.load(r.text)
+        except:
+            raise ValueError('Failed to read or parse YAML at %s' % url)
 
-        return yaml.load(r.text)
+        return data
 
     def get_table(self, keys, value, version=None):
         """
         Fetches and creates and agate table from a specified lookup table.
+
+        The resulting table will automatically have row names created for the
+        key columns, thus allowing it to be used as a lookup.
 
         :param keys:
             Either a single string or a sequence of keys that identify the
@@ -110,4 +116,9 @@ class Source(object):
 
         url = self._table_url_func(self._root, keys, value, version)
 
-        return agate.Table.from_url(url, column_types=tester, callback=self._callback)
+        if agate.utils.issequence(keys):
+            row_names = lambda r: tuple(r[k] for k in keys)
+        else:
+            row_names = keys
+
+        return agate.Table.from_url(url, column_types=tester, row_names=row_names, callback=self._callback)
