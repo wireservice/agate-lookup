@@ -4,11 +4,7 @@
 This module contains the Lookup extension to :class:`Table <agate.table.Table>`.
 """
 
-import agateremote
-
 from agatelookup.source import Source
-
-agateremote.patch()
 
 DEFAULT_SOURCE = Source()
 

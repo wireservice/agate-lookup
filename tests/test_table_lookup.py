@@ -8,10 +8,15 @@ except ImportError:
 
 import agate
 import agatelookup
+import mock
+import requests
 
 agatelookup.patch()
 
 class TestLookup(agate.AgateTestCase):
+    def setUp(self):
+        self._source = agatelookup.Source(cache=False)
+
     def test_lookup(self):
         rows = (
             ('WA',),
@@ -24,7 +29,7 @@ class TestLookup(agate.AgateTestCase):
 
         table = agate.Table(rows, column_names, column_types)
 
-        result = table.lookup('usps', 'state')
+        result = table.lookup('usps', 'state', source=self._source)
 
         self.assertColumnNames(result, ['usps', 'state'])
         self.assertColumnTypes(result, [agate.Text, agate.Text])
@@ -43,7 +48,7 @@ class TestLookup(agate.AgateTestCase):
 
         table = agate.Table(rows, column_names, column_types)
 
-        result = table.lookup('naics', 'description', version='2012')
+        result = table.lookup('naics', 'description', version='2012', source=self._source)
 
         self.assertColumnNames(result, ['naics', 'description'])
         self.assertColumnTypes(result, [agate.Text, agate.Text])
@@ -62,7 +67,7 @@ class TestLookup(agate.AgateTestCase):
 
         table = agate.Table(rows, column_names, column_types)
 
-        result = table.lookup(['usps', 'year'], 'population')
+        result = table.lookup(['usps', 'year'], 'population', source=self._source)
 
         self.assertColumnNames(result, ['usps', 'year', 'population'])
         self.assertColumnTypes(result, [agate.Text, agate.Text, agate.Number])
@@ -81,7 +86,7 @@ class TestLookup(agate.AgateTestCase):
 
         table = agate.Table(rows, column_names, column_types)
 
-        result = table.lookup('usps', 'state')
+        result = table.lookup('usps', 'state', source=self._source)
 
         self.assertColumnNames(result, ['usps', 'state'])
         self.assertColumnTypes(result, [agate.Text, agate.Text])
@@ -101,7 +106,7 @@ class TestLookup(agate.AgateTestCase):
         table = agate.Table(rows, column_names, column_types)
 
         with self.assertRaises(ValueError):
-            result = table.lookup('usps', 'state', require_match=True)
+            result = table.lookup('usps', 'state', require_match=True, source=self._source)
 
     def test_from_lookup(self):
         table = agate.Table.from_lookup('usps', 'state')
@@ -109,3 +114,20 @@ class TestLookup(agate.AgateTestCase):
         self.assertColumnNames(table, ['usps', 'state'])
         self.assertColumnTypes(table, [agate.Text, agate.Text])
         self.assertSequenceEqual(table.rows[1].values(), ['AK', 'Alaska'])
+
+    def test_connection_fails(self):
+        with mock.patch.object(requests, 'get') as mock_method:
+            mock_method.side_effect = requests.ConnectionError
+
+            with self.assertRaises(RuntimeError):
+                agate.Table.from_lookup('usps', 'state', source=self._source)
+
+    def test_cache(self):
+        source = agatelookup.Source(cache='examples')
+
+        with mock.patch.object(requests, 'get') as mock_method:
+            mock_method.side_effect = requests.ConnectionError
+
+            table = agate.Table.from_lookup('usps', 'state', source=source)
+
+        self.assertColumnNames(table, ['usps', 'state'])

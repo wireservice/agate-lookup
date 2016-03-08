@@ -1,43 +1,44 @@
 #!/usr/bin/env python
 
+import io
+import os
+
 import agate
-import agateremote
+import six
 import requests
 import yaml
 
-agateremote.patch()
-
-def default_table_url_func(root, keys, value, version=None):
+def make_table_path(keys, value, version=None):
     """
-    Default function for converting lookup table data into a table URL.
+    Generate a path to find a given lookup table.
     """
     if isinstance(keys, (list, tuple)):
         keys = '/'.join(keys)
 
-    url = '%s/%s/%s' % (root, keys, value)
+    path = '%s/%s' % (keys, value)
 
     if version:
-        url += '.%s' % version
+        path += '.%s' % version
 
-    url += '.csv'
+    path += '.csv'
 
-    return url
+    return path
 
-def default_metadata_url_func(root, keys, value, version=None):
+def make_metadata_path(keys, value, version=None):
     """
-    Default method of converting lookup table data into a metadata file url.
+    Generate a path to find a given lookup table.
     """
     if isinstance(keys, (list, tuple)):
         keys = '/'.join(keys)
 
-    url = '%s/%s/%s' % (root, keys, value)
+    path = '%s/%s' % (keys, value)
 
     if version:
-        url += '.%s' % version
+        path += '.%s' % version
 
-    url += '.csv.yml'
+    path += '.csv.yml'
 
-    return url
+    return path
 
 def make_type_tester(meta):
     """
@@ -48,7 +49,7 @@ def make_type_tester(meta):
     force = {}
 
     for k, v in meta['columns'].items():
-        force[k] = getattr(agate, v)()
+        force[k] = getattr(agate, v['type'])()
 
     return agate.TypeTester(force=force)
 
@@ -59,22 +60,43 @@ class Source(object):
 
     :param root:
         The root URL to prefix all data and metadata paths.
-    :param table_url_func:
-        A function that takes table metadata and returns an absolute URL to
-        that table's data file. See :func:`default_table_url_func`.
-    :param metadata_url_func:
-        A function that takes table metadata and returns an absolute URL to
-        that table's data file. See :func:`default_metadata_url_func`.
-    :param callback:
-        A function that translates the remote data table into an agate table.
-        Typically this is :meth:`.agate.Table.from_csv`, but it could also be
-        :meth:`.agate.Table.from_json` or a method provided by an extension.
+    :param cache:
+        A path in which to store cached copies of any tables that are used, so
+        they can continue to be used offline.
     """
-    def __init__(self, root='http://wireservice.github.io/lookup', table_url_func=default_table_url_func, metadata_url_func=default_metadata_url_func, callback=agate.Table.from_csv):
+    def __init__(self, root='http://wireservice.github.io/lookup', cache='~/.lookup'):
         self._root = root
-        self._table_url_func = table_url_func
-        self._metadata_url_func = metadata_url_func
-        self._callback = callback
+        self._cache = os.path.expanduser(cache) if cache else None
+
+    def _read_cache(self, path):
+        """
+        Read a file from the lookup cache.
+        """
+        if self._cache:
+            cache_path = os.path.join(self._cache, path)
+
+            if os.path.exists(cache_path):
+                with io.open(cache_path, encoding='utf-8') as f:
+                    text = f.read()
+
+                return text
+
+        raise RuntimeError('Unable to download remote file "%s" and local cache is not available.' % path)
+
+    def _write_cache(self, path, text):
+        """
+        Write a file to the lookup cache.
+        """
+        if self._cache:
+            cache_path = os.path.join(self._cache, path)
+
+            folder = os.path.split(cache_path)[0]
+
+            if not os.path.exists(folder):
+                os.makedirs(folder)
+
+            with io.open(cache_path, 'w', encoding='utf-8') as f:
+                f.write(text)
 
     def get_metadata(self, keys, value, version=None):
         """
@@ -82,11 +104,19 @@ class Source(object):
 
         See :meth:`Source.get_table` for parameter details.
         """
-        url = self._metadata_url_func(self._root, keys, value, version)
-        r = requests.get(url)
+        path = make_metadata_path(keys, value, version)
+        url = '%s/%s' % (self._root, path)
 
         try:
-            data = yaml.load(r.text)
+            r = requests.get(url)
+            text = r.text
+
+            self._write_cache(path, text)
+        except (requests.ConnectionError, requests.Timeout):
+            text = self._read_cache(path)
+
+        try:
+            data = yaml.load(text)
         except:
             raise ValueError('Failed to read or parse YAML at %s' % url)
 
@@ -114,11 +144,23 @@ class Source(object):
         meta = self.get_metadata(keys, value, version)
         tester = make_type_tester(meta)
 
-        url = self._table_url_func(self._root, keys, value, version)
+        path = make_table_path(keys, value, version)
+        url = '%s/%s' % (self._root, path)
 
         if agate.utils.issequence(keys):
             row_names = lambda r: tuple(r[k] for k in keys)
         else:
             row_names = keys
 
-        return agate.Table.from_url(url, column_types=tester, row_names=row_names, callback=self._callback)
+        try:
+            r = requests.get(url)
+            text = r.text
+
+            self._write_cache(path, text)
+        except (requests.ConnectionError, requests.Timeout):
+            text = self._read_cache(path)
+
+        if six.PY2:
+            text = text.encode('utf-8')
+
+        return agate.Table.from_csv(six.StringIO(text), column_types=tester, row_names=row_names)

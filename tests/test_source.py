@@ -29,6 +29,7 @@ class TestSource(agate.AgateTestCase):
 
     def test_get_table_multiple_keys(self):
         table = self.source.get_table(['year', 'month'], 'cpi')
+        print(table)
 
         self.assertColumnNames(table, ['year', 'month', 'cpi'])
         self.assertColumnTypes(table, [agate.Text, agate.Text, agate.Number])
