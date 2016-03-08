@@ -1,6 +1,8 @@
 0.2.0
 -----
 
+* Update to latest `lookup` metadata format.
+* Implement local caching for offline usage. (#14)
 * Remove options to :class:`Source` for generating custom file paths.
 
 0.1.1
