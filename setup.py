@@ -10,7 +10,7 @@ install_requires = [
 
 setup(
     name='agate-lookup',
-    version='0.2.0',
+    version='0.2.1',
     description='agate-lookup adds remote lookup tables to agate.',
     long_description=open('README.rst').read(),
     author='Christopher Groskopf',
