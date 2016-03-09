@@ -9,23 +9,23 @@ from agatelookup.source import Source
 DEFAULT_SOURCE = Source()
 
 class TableLookup(object):
-    def lookup(self, source_key, value, table_key=None, version=None, source=None, require_match=False):
+    def lookup(self, key, value, lookup_key=None, version=None, source=None, require_match=False):
         """
         Fetch a lookup table from the remote source, matches it this table by
         its key columns, appends the value column and returns a new table
         instance.
 
-        :param source_key:
-            A column name or a sequence of such names to match in the lookup
-            table. For example :code:`'naics'` or :code:`['city', 'year']`.
+        :param key:
+            A column name or a sequence of such names to match in this table.
         :param value:
             The value that is being looked up. For example :code:`'description'`
             or :code:`'population'`. This is the column that will be appended.
-        :param table_key:
-            A column name or a sequence of such names to match in this table.
-            This defaults the same values specified for `source_key`, so it
-            only needs to be specified if the column names in this table don't
-            match.
+        :param lookup_key:
+            A column name or a sequence of such names to match in the lookup
+            table. For example :code:`'naics'` or :code:`['city', 'year']`.
+            This defaults the same values specified for `key`, so it
+            only needs to be specified if the column names in this table
+            aren't the same.
         :param version:
             An optional version of the lookup to use, if more than one exists.
             For instance :code:`'2007'` for the 2007 edition of the NAICS codes
@@ -43,12 +43,12 @@ class TableLookup(object):
         if source is None:
             source = DEFAULT_SOURCE
 
-        table = source.get_table(source_key, value, version)
+        table = source.get_table(lookup_key or key, value, version)
 
-        return self.join(table, table_key or source_key, source_key, require_match=require_match)
+        return self.join(table, key, lookup_key, require_match=require_match)
 
     @classmethod
-    def from_lookup(cls, source_key, value, version=None, source=None):
+    def from_lookup(cls, lookup_key, value, version=None, source=None):
         """
         Fetch a lookup table, but don't join it to anything. See
         :meth:`.TableLookup.lookup` for arguments.
@@ -56,4 +56,4 @@ class TableLookup(object):
         if source is None:
             source = DEFAULT_SOURCE
 
-        return source.get_table(source_key, value, version)
+        return source.get_table(lookup_key, value, version)

@@ -1,6 +1,9 @@
-0.2.1
------
+0.2.1 - March 9, 2016
+---------------------
 
+* Reorganize docs.
+* Add caching to docs.
+* Reversed order of source and table keys in lookup method.
 
 0.2.0 - March 8, 2016
 ---------------------

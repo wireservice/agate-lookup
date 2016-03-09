@@ -36,6 +36,25 @@ class TestLookup(agate.AgateTestCase):
 
         self.assertSequenceEqual(result.rows[1].values(), ['VA', 'Virginia'])
 
+    def test_lookup_key(self):
+        rows = (
+            ('WA',),
+            ('VA',),
+            ('TX',)
+        )
+
+        column_names = ['postal']
+        column_types = [agate.Text()]
+
+        table = agate.Table(rows, column_names, column_types)
+
+        result = table.lookup('postal', 'state', lookup_key='usps', source=self._source)
+
+        self.assertColumnNames(result, ['postal', 'state'])
+        self.assertColumnTypes(result, [agate.Text, agate.Text])
+
+        self.assertSequenceEqual(result.rows[1].values(), ['VA', 'Virginia'])
+
     def test_lookup_version(self):
         rows = (
             ('1111',),
