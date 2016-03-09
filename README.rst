@@ -18,7 +18,7 @@
     :target: https://pypi.python.org/pypi/agate-lookup
     :alt: Support Python versions
 
-agate-lookup adds remote `lookup <https://github.com/wireservice/lookup>`_ tables to `agate <https://github.com/wireservice/agate>`_.
+agate-lookup adds one-line access to `lookup <https://github.com/wireservice/lookup>`_ tables to `agate <https://github.com/wireservice/agate>`_.
 
 Important links:
 

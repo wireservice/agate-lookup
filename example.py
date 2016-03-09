@@ -34,6 +34,8 @@ table = agate.Table([
     ('SC', '1994')
 ], ['usps', 'year'], [agate.Text(), agate.Text()])
 
+table.print_table()
+
 joined = table.lookup(['usps', 'year'], 'population')
 
 joined.print_table()

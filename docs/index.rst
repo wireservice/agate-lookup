@@ -15,10 +15,10 @@ To install:
 
 For details on development or supported platforms see the `agate documentation <http://agate.readthedocs.org>`_.
 
-Usage
-=====
+Import
+======
 
-agate-lookup is an agate extension. To use it, first import it and patch its functionality into agate:
+agate-lookup is an agate `extension <http://agate.readthedocs.org/en/latest/extensions.html>`_. To use it, first import it and patch its functionality into agate:
 
 .. code-block:: python
 
@@ -27,9 +27,12 @@ agate-lookup is an agate extension. To use it, first import it and patch its fun
 
   agatelookup.patch()
 
-Calling :func:`.patch` attaches all the methods of :class:`.Tablelookup` to :class:`agate.Table <agate.table.Table>`.
+Calling :func:`.patch` attaches all the methods of :class:`.TableLookup` to :class:`agate.Table <agate.table.Table>`.
 
-After that, you simply use the :meth:`.TableLookup.lookup` method on your table, passing in the number of the columns to match on and the value you wish to lookup. For example, if you have this table:
+Basic lookup
+============
+
+agate-lookup allows you to join your tables to data from the `lookup <https://github.com/wireservice/lookup>`_ project. The basic mechanism for doing this is the :meth:`.TableLookup.lookup` method. For example, if you have this table:
 
 +---------+------+
 | company | usps |
@@ -63,17 +66,50 @@ If your table has different keys from the lookup table, you can specify them usi
 
 .. code-block:: python
 
-    joined = table.lookup('usps', 'state', 'postal')
+    joined = table.lookup('usps', 'state', table_key='postal')
 
-You can also select a particular version of the lookup table using the :code:`version` argument. For example, to join the :code:`2012` edition of the NAICS codes, you would run:
+Multi-column lookup
+===================
+
+Some lookup tables have multiple key columns, for example :code:`year` and :code:`month`. To join to a table like this, pass a sequence of column names as the first argument. For example, consider this table:
+
++-------+-------+
+|  usps | year  |
++=======+=======+
+|  AZ   | 1985  |
++-------+-------+
+|  WY   | 2014  |
++-------+-------+
+|  SC   | 1994  |
++-------+-------+
+
+We can join the population of the state for each year with this code:
+
+.. code-block:: python
+
+    joined = table.lookup(['usps', 'year'], 'population')
+
++-------+------+-------------+
+|  usps | year | population  |
++=======+======+=============+
+|  AZ   | 1985 |  3,183,538  |
++-------+------+-------------+
+|  WY   | 2014 |    584,153  |
++-------+------+-------------+
+|  SC   | 1994 |  3,705,397  |
++-------+------+-------------+
+
+Versioned lookup
+================
+
+Some lookup tables have several versions. For example, the NAICS business code classification is revised every 5 years. You can also select a particular version of the lookup table using the :code:`version` argument. To join the :code:`2012` edition of the NAICS codes, you would run:
 
 .. code-block:: python
 
     joined = table.lookup('naics', 'description', version='2012')
 
-By default, agate-lookup will use the `wireservice/lookup <https://github.com/wireservice/lookup>`_ repository of lookup tables. Look there to see what key/value combinations and versions you can use with lookup.
-
-You can specify your own repository of lookupt ables by constructing an instance of :class:`.Source` and passing it into the :meth:`.TableLookup.lookup` method.
+Fetch a table without joining
+=============================
 
 You can also fetch a lookup table without joining it. For example, to get the Consumer Price Index by year and month:
 
@@ -107,10 +143,19 @@ Lookup tables automatically have :code:`row_names` assigned. In this case the ro
 
 The :code:`adjusted` table will now have a :code:`real_price` column with prices in December, 2015 dollars.
 
+Using a custom repository
+=========================
+
+By default, agate-lookup will use the `wireservice/lookup <https://github.com/wireservice/lookup>`_ repository of lookup tables. Look there to see what key/value combinations and versions you can use with lookup.
+
+You can specify your own repository of lookup tables by constructing an instance of :class:`.Source` and passing it into the :meth:`.TableLookup.lookup` method.
+
 Caching
 =======
 
 Lookup tables are cached each time they are downloaded. The default cache location is :code:`~/lookup`. In order to ensure you have the latest version, tables are redownloaded each time that they are used, unless a network connection can not be made. If there is a connection issue, the cached copy will be read from disk.
+
+You can override the default caching location by creating a custom :class:`Source` and passing the :code:`cache` argument.
 
 API
 ===
