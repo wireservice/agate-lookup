@@ -66,7 +66,7 @@ If your table has different keys from the lookup table, you can specify them usi
 
 .. code-block:: python
 
-    joined = table.lookup('usps', 'state', table_key='postal')
+    joined = table.lookup('postal', 'state', lookup_key='usps')
 
 Multi-column lookup
 ===================
