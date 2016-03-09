@@ -59,11 +59,21 @@ The resulting table would be:
 | Chevron | CA   | California |
 +---------+------+------------+
 
-If your table has different keys from the lookup table, you can specify them using the :code:`table_keys` keyword argument. You can also select a particular version of the lookup table using the :code:`version` argument.
+If your table has different keys from the lookup table, you can specify them using the :code:`table_key` argument. For example, if your table had the column name :code:`postal` then you could achieve the same result by running:
+
+.. code-block:: python
+
+    joined = table.lookup('usps', 'state', 'postal')
+
+You can also select a particular version of the lookup table using the :code:`version` argument. For example, to join the :code:`2012` edition of the NAICS codes, you would run:
+
+.. code-block:: python
+
+    joined = table.lookup('naics', 'description', version='2012')
 
 By default, agate-lookup will use the `wireservice/lookup <https://github.com/wireservice/lookup>`_ repository of lookup tables. Look there to see what key/value combinations and versions you can use with lookup.
 
-You can also specify your own repository of lookupt ables by constructing an instance of :class:`.Source` and passing it into the :meth:`.TableLookup.lookup` method.
+You can specify your own repository of lookupt ables by constructing an instance of :class:`.Source` and passing it into the :meth:`.TableLookup.lookup` method.
 
 You can also fetch a lookup table without joining it. For example, to get the Consumer Price Index by year and month:
 
@@ -83,7 +93,7 @@ You can also fetch a lookup table without joining it. For example, to get the Co
 |  ...  | ...   |   ...  |
 +-------+-------+--------+
 
-Fetch tables automatically have :code:`row_names` assigned. In this case the row names are a tuple of :code:`(year, month)`. We can use this to quickly calculate inflation-adjusted prices in another table.
+Lookup tables automatically have :code:`row_names` assigned. In this case the row names are a tuple of :code:`(year, month)`. We can use this to quickly calculate inflation-adjusted prices in another table.
 
 .. code-block:: python
 
@@ -97,7 +107,11 @@ Fetch tables automatically have :code:`row_names` assigned. In this case the row
 
 The :code:`adjusted` table will now have a :code:`real_price` column with prices in December, 2015 dollars.
 
-===
+Caching
+=======
+
+Lookup tables are cached each time they are downloaded. The default cache location is :code:`~/lookup`. In order to ensure you have the latest version, tables are redownloaded each time that they are used, unless a network connection can not be made. If there is a connection issue, the cached copy will be read from disk.
+
 API
 ===
 
