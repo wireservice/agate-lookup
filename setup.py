@@ -3,14 +3,14 @@
 from setuptools import setup
 
 install_requires = [
-    'agate>=1.3.0',
+    'agate>=1.5.0',
     'requests>=2.9.1',
     'pyyaml>=3.11'
 ]
 
 setup(
     name='agate-lookup',
-    version='0.2.2',
+    version='0.3.0',
     description='agate-lookup adds remote lookup tables to agate.',
     long_description=open('README.rst').read(),
     author='Christopher Groskopf',

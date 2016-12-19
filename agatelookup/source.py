@@ -160,7 +160,4 @@ class Source(object):
         except (requests.ConnectionError, requests.Timeout):
             text = self._read_cache(path)
 
-        if six.PY2:
-            text = text.encode('utf-8')
-
         return agate.Table.from_csv(six.StringIO(text), column_types=tester, row_names=row_names)

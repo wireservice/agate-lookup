@@ -25,9 +25,7 @@ agate-lookup is an agate `extension <http://agate.readthedocs.org/en/latest/exte
   import agate
   import agatelookup
 
-  agatelookup.patch()
-
-Calling :func:`.patch` attaches all the methods of :class:`.TableLookup` to :class:`agate.Table <agate.table.Table>`.
+Importing agate-lookup adds methods to :class:`agate.Table <agate.table.Table>`.
 
 Basic lookup
 ============
@@ -160,10 +158,9 @@ You can override the default caching location by creating a custom :class:`Sourc
 API
 ===
 
-.. autofunction:: agatelookup.patch
+.. autofunction:: agatelookup.table.lookup
 
-.. autoclass:: agatelookup.table_lookup.TableLookup
-    :members:
+.. autofunction:: agatelookup.table.from_lookup
 
 .. autoclass:: agatelookup.source.Source
     :members:

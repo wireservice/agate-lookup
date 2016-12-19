@@ -3,8 +3,6 @@
 import agate
 import agatelookup
 
-agatelookup.patch()
-
 # Simple
 table = agate.Table([
     ('WA',),

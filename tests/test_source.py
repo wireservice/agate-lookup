@@ -9,8 +9,6 @@ except ImportError:
 import agate
 import agatelookup
 
-agatelookup.patch()
-
 class TestSource(agate.AgateTestCase):
     def setUp(self):
         self.source = agatelookup.Source()

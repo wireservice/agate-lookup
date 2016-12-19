@@ -11,8 +11,6 @@ import agatelookup
 import mock
 import requests
 
-agatelookup.patch()
-
 class TestLookup(agate.AgateTestCase):
     def setUp(self):
         self._source = agatelookup.Source(cache=False)
