@@ -64,7 +64,7 @@ class Source(object):
         A path in which to store cached copies of any tables that are used, so
         they can continue to be used offline.
     """
-    def __init__(self, root='http://wireservice.github.io/lookup', cache='~/.lookup'):
+    def __init__(self, root='https://raw.githubusercontent.com/wireservice/lookup', cache='~/.lookup'):
         self._root = root
         self._cache = os.path.expanduser(cache) if cache else None
 
