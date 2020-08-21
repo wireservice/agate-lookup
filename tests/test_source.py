@@ -26,7 +26,7 @@ class TestSource(agate.AgateTestCase):
         self.assertSequenceEqual(table.row_names[:2], ['AL', 'AK'])
 
     def test_get_table_multiple_keys(self):
-        table = self.source.get_table(['year', 'month'], 'cpi')
+        table = self.source.get_table(['year', 'month'], 'cpi.sa')
         print(table)
 
         self.assertColumnNames(table, ['year', 'month', 'cpi'])
