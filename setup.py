@@ -38,5 +38,15 @@ setup(
         'agate>=1.5.0',
         'requests>=2.9.1',
         'pyyaml>=3.11'
-    ]
+    ],
+    extras_require={
+        'test': [
+            'pytest',
+            'pytest-cov',
+        ],
+        'docs': [
+            'Sphinx>=1.2.2',
+            'sphinx_rtd_theme>=0.1.6',
+        ],
+    }
 )
