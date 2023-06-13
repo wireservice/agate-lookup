@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 
+from unittest.mock import patch
+
 import agate
-import mock
 import requests
 
 import agatelookup  # noqa: F401
@@ -130,7 +131,7 @@ class TestLookup(agate.AgateTestCase):
         self.assertSequenceEqual(table.rows[1].values(), ['AK', 'Alaska'])
 
     def test_connection_fails(self):
-        with mock.patch.object(requests, 'get') as mock_method:
+        with patch.object(requests, 'get') as mock_method:
             mock_method.side_effect = requests.ConnectionError
 
             with self.assertRaises(RuntimeError):
@@ -139,7 +140,7 @@ class TestLookup(agate.AgateTestCase):
     def test_cache(self):
         source = agatelookup.Source(cache='examples')
 
-        with mock.patch.object(requests, 'get') as mock_method:
+        with patch.object(requests, 'get') as mock_method:
             mock_method.side_effect = requests.ConnectionError
 
             table = agate.Table.from_lookup('usps', 'state', source=source)
