@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import io
 import os
 
 import agate
@@ -16,7 +15,7 @@ def make_table_path(keys, value, version=None):
     if isinstance(keys, (list, tuple)):
         keys = '/'.join(keys)
 
-    path = '%s/%s' % (keys, value)
+    path = f'{keys}/{value}'
 
     if version:
         path += '.%s' % version
@@ -33,7 +32,7 @@ def make_metadata_path(keys, value, version=None):
     if isinstance(keys, (list, tuple)):
         keys = '/'.join(keys)
 
-    path = '%s/%s' % (keys, value)
+    path = f'{keys}/{value}'
 
     if version:
         path += '.%s' % version
@@ -57,7 +56,7 @@ def make_type_tester(meta):
     return agate.TypeTester(force=force)
 
 
-class Source(object):
+class Source:
     """
     A reference to an archive of lookup tables. This is a remote location with
     lookup table and metadata files at a known path structure.
@@ -81,7 +80,7 @@ class Source(object):
             cache_path = os.path.join(self._cache, path)
 
             if os.path.exists(cache_path):
-                with io.open(cache_path, encoding='utf-8') as f:
+                with open(cache_path, encoding='utf-8') as f:
                     text = f.read()
 
                 return text
@@ -100,7 +99,7 @@ class Source(object):
             if not os.path.exists(folder):
                 os.makedirs(folder)
 
-            with io.open(cache_path, 'w', encoding='utf-8') as f:
+            with open(cache_path, 'w', encoding='utf-8') as f:
                 f.write(text)
 
     def get_metadata(self, keys, value, version=None):
@@ -110,7 +109,7 @@ class Source(object):
         See :meth:`Source.get_table` for parameter details.
         """
         path = make_metadata_path(keys, value, version)
-        url = '%s/%s' % (self._root, path)
+        url = f'{self._root}/{path}'
 
         try:
             r = requests.get(url)
@@ -150,7 +149,7 @@ class Source(object):
         tester = make_type_tester(meta)
 
         path = make_table_path(keys, value, version)
-        url = '%s/%s' % (self._root, path)
+        url = f'{self._root}/{path}'
 
         if agate.utils.issequence(keys):
             def row_names(r): return tuple(r[k] for k in keys)
