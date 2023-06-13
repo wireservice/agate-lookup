@@ -11,7 +11,7 @@ setup(
     long_description_content_type='text/x-rst',
     author='Christopher Groskopf',
     author_email='chrisgroskopf@gmail.com',
-    url='http://agate-lookup.readthedocs.org/',
+    url='https://agate-lookup.readthedocs.org/',
     license='MIT',
     classifiers=[
         'Development Status :: 4 - Beta',

@@ -69,7 +69,7 @@ class Source(object):
         they can continue to be used offline.
     """
 
-    def __init__(self, root='http://wireservice.github.io/lookup', cache='~/.lookup'):
+    def __init__(self, root='https://wireservice.github.io/lookup', cache='~/.lookup'):
         self._root = root
         self._cache = os.path.expanduser(cache) if cache else None
 

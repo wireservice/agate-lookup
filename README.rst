@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.org/wireservice/agate-lookup.png
-    :target: https://travis-ci.org/wireservice/agate-lookup
+.. image:: https://github.com/wireservice/agate-lookup/workflows/CI/badge.svg
+    :target: https://github.com/wireservice/agate-lookup/actions
     :alt: Build status
 
 .. image:: https://img.shields.io/pypi/dw/agate-lookup.svg
@@ -22,7 +22,7 @@ agate-lookup adds one-line access to `lookup <https://github.com/wireservice/loo
 
 Important links:
 
-* agate             http://agate.rtfd.org
-* Documentation:    http://agate-lookup.rtfd.org
+* agate             https://agate.rtfd.org
+* Documentation:    https://agate-lookup.rtfd.org
 * Repository:       https://github.com/wireservice/agate-lookup
 * Issues:           https://github.com/wireservice/agate-lookup/issues

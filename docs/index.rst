@@ -13,12 +13,12 @@ To install:
 
     pip install agate-lookup
 
-For details on development or supported platforms see the `agate documentation <http://agate.readthedocs.org>`_.
+For details on development or supported platforms see the `agate documentation <https://agate.readthedocs.org>`_.
 
 Import
 ======
 
-agate-lookup is an agate `extension <http://agate.readthedocs.org/en/latest/extensions.html>`_. To use it, first import it and patch its functionality into agate:
+agate-lookup is an agate `extension <https://agate.readthedocs.org/en/latest/extensions.html>`_. To use it, first import it and patch its functionality into agate:
 
 .. code-block:: python
 
