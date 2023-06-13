@@ -120,7 +120,7 @@ class Source:
             text = self._read_cache(path)
 
         try:
-            data = yaml.load(text)
+            data = yaml.safe_load(text)
         except yaml.YAMLError:
             raise ValueError('Failed to read or parse YAML at %s' % url)
 
