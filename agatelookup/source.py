@@ -4,9 +4,10 @@ import io
 import os
 
 import agate
-import six
 import requests
+import six
 import yaml
+
 
 def make_table_path(keys, value, version=None):
     """
@@ -24,6 +25,7 @@ def make_table_path(keys, value, version=None):
 
     return path
 
+
 def make_metadata_path(keys, value, version=None):
     """
     Generate a path to find a given lookup table.
@@ -40,6 +42,7 @@ def make_metadata_path(keys, value, version=None):
 
     return path
 
+
 def make_type_tester(meta):
     """
     Uses parsed lookup table metadata to create a :class:`.agate.TypeTester`
@@ -53,6 +56,7 @@ def make_type_tester(meta):
 
     return agate.TypeTester(force=force)
 
+
 class Source(object):
     """
     A reference to an archive of lookup tables. This is a remote location with
@@ -64,6 +68,7 @@ class Source(object):
         A path in which to store cached copies of any tables that are used, so
         they can continue to be used offline.
     """
+
     def __init__(self, root='http://wireservice.github.io/lookup', cache='~/.lookup'):
         self._root = root
         self._cache = os.path.expanduser(cache) if cache else None
@@ -117,7 +122,7 @@ class Source(object):
 
         try:
             data = yaml.load(text)
-        except:
+        except yaml.YAMLError:
             raise ValueError('Failed to read or parse YAML at %s' % url)
 
         return data
@@ -148,7 +153,7 @@ class Source(object):
         url = '%s/%s' % (self._root, path)
 
         if agate.utils.issequence(keys):
-            row_names = lambda r: tuple(r[k] for k in keys)
+            def row_names(r): return tuple(r[k] for k in keys)
         else:
             row_names = keys
 

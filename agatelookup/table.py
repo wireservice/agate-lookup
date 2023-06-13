@@ -10,6 +10,7 @@ from agatelookup.source import Source
 
 DEFAULT_SOURCE = Source()
 
+
 def lookup(self, key, value, lookup_key=None, version=None, source=None, require_match=False):
     """
     Fetch a lookup table from the remote source, matches it this table by
@@ -48,6 +49,7 @@ def lookup(self, key, value, lookup_key=None, version=None, source=None, require
 
     return self.join(table, key, lookup_key, require_match=require_match)
 
+
 def from_lookup(cls, lookup_key, value, version=None, source=None):
     """
     Fetch a lookup table, but don't join it to anything. See
@@ -57,6 +59,7 @@ def from_lookup(cls, lookup_key, value, version=None, source=None):
         source = DEFAULT_SOURCE
 
     return source.get_table(lookup_key, value, version)
+
 
 agate.Table.lookup = lookup
 agate.Table.from_lookup = classmethod(from_lookup)

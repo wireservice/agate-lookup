@@ -1,15 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
-
 import agate
-import agatelookup
 import mock
 import requests
+
+import agatelookup  # noqa: F401
+
 
 class TestLookup(agate.AgateTestCase):
     def setUp(self):
@@ -123,7 +120,7 @@ class TestLookup(agate.AgateTestCase):
         table = agate.Table(rows, column_names, column_types)
 
         with self.assertRaises(ValueError):
-            result = table.lookup('usps', 'state', require_match=True, source=self._source)
+            table.lookup('usps', 'state', require_match=True, source=self._source)
 
     def test_from_lookup(self):
         table = agate.Table.from_lookup('usps', 'state')
