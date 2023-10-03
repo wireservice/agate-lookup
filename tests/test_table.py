@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from unittest.mock import patch
 
 import agate
