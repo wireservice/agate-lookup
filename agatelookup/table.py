@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 This module contains the Lookup extension to :class:`Table <agate.table.Table>`.
 """
