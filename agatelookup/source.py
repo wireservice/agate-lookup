@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
+import io
 import os
 
 import agate
 import requests
-import six
 import yaml
 
 
@@ -164,4 +164,4 @@ class Source:
         except (requests.ConnectionError, requests.Timeout):
             text = self._read_cache(path)
 
-        return agate.Table.from_csv(six.StringIO(text), column_types=tester, row_names=row_names)
+        return agate.Table.from_csv(io.StringIO(text), column_types=tester, row_names=row_names)
