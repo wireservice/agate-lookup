@@ -2,6 +2,10 @@
     :target: https://github.com/wireservice/agate-lookup/actions
     :alt: Build status
 
+.. image:: https://coveralls.io/repos/wireservice/agate-lookup/badge.svg?branch=master
+    :target: https://coveralls.io/r/wireservice/agate-lookup
+    :alt: Coverage status
+
 .. image:: https://img.shields.io/pypi/dw/agate-lookup.svg
     :target: https://pypi.python.org/pypi/agate-lookup
     :alt: PyPI downloads
