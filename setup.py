@@ -5,7 +5,7 @@ with open('README.rst') as f:
 
 setup(
     name='agate-lookup',
-    version='0.3.2',
+    version='0.3.3',
     description='agate-lookup adds remote lookup tables to agate.',
     long_description=long_description,
     long_description_content_type='text/x-rst',
