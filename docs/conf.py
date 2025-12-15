@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 project = 'agate-lookup'
 copyright = '2016, Christopher Groskopf'
-version = '0.3.3'
+version = '0.3.4'
 release = version
 
 # -- General configuration ---------------------------------------------------
